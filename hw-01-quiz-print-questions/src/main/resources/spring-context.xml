@@ -4,6 +4,20 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="personService" class="ru.chupaYchups.service.PersonServiceImpl"/>
+    <bean id="questionsDao" class="ru.chupaYchups.dao.CsvQuestionsDao">
+        <constructor-arg name="csvFileName" value="/questions.csv"/>
+        <constructor-arg name="csvRecordToQuestionParser" ref="csvRecordToQuestionParser"/>
+    </bean>
+
+    <bean id="csvRecordToQuestionParser" class="ru.chupaYchups.dao.CsvRecordToQuestionParserImpl"/>
+
+    <bean id="outputService" class="ru.chupaYchups.service.PrintStreamOutputService">
+        <constructor-arg name="printStream" value="#{T(java.lang.System).out}"/>
+    </bean>
+
+    <bean id="quizService" class="ru.chupaYchups.service.QuizServiceImpl">
+        <constructor-arg name="questionsDao" ref="questionsDao"/>
+        <constructor-arg name="outputService" ref="outputService"/>
+    </bean>
 
 </beans>
